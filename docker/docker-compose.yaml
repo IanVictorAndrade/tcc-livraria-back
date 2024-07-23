@@ -5,7 +5,7 @@ services:
     container_name: banco_de_dados
     environment:
       POSTGRES_PASSWORD: Admin@123
-      POSTGRES_DB: encurtador
+      POSTGRES_DB: livraria
       POSTGRES_USER: ian
     ports:
       - "5432:5432"
