@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails
 data class Usuario (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    var id: Long,
     val nome: String,
     val cpf: String,
     var email: String,
