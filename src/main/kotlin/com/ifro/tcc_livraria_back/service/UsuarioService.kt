@@ -32,10 +32,9 @@ class UsuarioService(
         val usuario = Usuario(0, "", "", "", "")
 
 
-        if (dados.id != 0.toLong()) {
+        if (dados.id != 0L) {
             throw LivrariaException(HttpStatus.INTERNAL_SERVER_ERROR, "campo id tem que ser 0")
         }
-
 
 
         usuario.email = dados.email
