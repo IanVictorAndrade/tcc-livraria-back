@@ -18,11 +18,11 @@ import java.util.stream.Collectors
 class UsuarioService(
     private val usuarioRepository: UsuarioRepository,
     private val usuarioMapper: UsuarioMapper,
-    private val passwordEncoder: BCryptPasswordEncoder
+    private val passwordEncoder: BCryptPasswordEncoder,
+    private val javaMailSender: JavaMailSender
 ) {
 
-    @Autowired
-    private val javaMailSender: JavaMailSender? = null
+
 
     @Value("\${spring.mail.username}")
     private val sender: String? = null
