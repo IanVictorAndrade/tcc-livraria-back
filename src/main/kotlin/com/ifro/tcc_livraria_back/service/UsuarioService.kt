@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.ifro.tcc_livraria_back.dto.DadosUsuario
 import com.ifro.tcc_livraria_back.mapper.UsuarioMapper
 import com.ifro.tcc_livraria_back.repository.UsuarioRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.mail.SimpleMailMessage
@@ -21,8 +20,6 @@ class UsuarioService(
     private val passwordEncoder: BCryptPasswordEncoder,
     private val javaMailSender: JavaMailSender
 ) {
-
-
 
     @Value("\${spring.mail.username}")
     private val sender: String? = null
@@ -56,9 +53,8 @@ class UsuarioService(
                 mailMessage.subject = "Recuperação de Senha"
                 mailMessage.text = "Seu token de recuperação é: $token"
 
-                javaMailSender!!.send(mailMessage)
-                val objectMapper = ObjectMapper()
-                val jsonResponse = objectMapper.writeValueAsString("E-mail enviado com Sucesso!")
+                javaMailSender.send(mailMessage)
+                val jsonResponse = ObjectMapper().writeValueAsString("E-mail enviado com Sucesso!")
                 jsonResponse
 
             } catch (e: Exception) {
