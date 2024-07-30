@@ -6,6 +6,7 @@ import com.ifro.tcc_livraria_back.mapper.UsuarioMapper
 import com.ifro.tcc_livraria_back.repository.UsuarioRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -28,6 +29,13 @@ class UsuarioService(
 
 
     fun listar(): List<DadosUsuario> = usuarioRepository.findAll().stream().map { t -> usuarioMapper.map(t) }.collect(Collectors.toList())
+
+    fun edita(user: DadosUsuario) {
+        val usuarioDB = usuarioRepository.findById(user.id).orElseThrow { NotFoundException() }
+        usuarioDB.email = user.email
+        val senhaCriptografada = passwordEncoder.encode(user.senha)
+        usuarioDB.senha = senhaCriptografada
+    }
 
     fun enviandoEmailDeRecuperacao(email: String): String {
         val emailConvertido = ObjectMapper().readTree(email)["email"].asText()
