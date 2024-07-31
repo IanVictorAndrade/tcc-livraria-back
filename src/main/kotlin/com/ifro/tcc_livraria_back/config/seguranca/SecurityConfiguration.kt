@@ -16,39 +16,39 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
-//    private val securityFilter: SecurityFilter
+    private val securityFilter: SecurityFilter
 ) {
     @Bean
     fun passwordEncoder() : BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
-//    @Bean
-//    fun configure(http: HttpSecurity): SecurityFilterChain {
-//
-//        http.invoke {
-//            csrf { disable() }
-//            authorizeRequests {
-//                authorize("/h2-console/**", permitAll)
-//                authorize("/login", permitAll)
-//                authorize("/usuarios/cadastro", permitAll)
-//                authorize("/usuarios/codigo-senha", permitAll)
-//                authorize("/usuarios/alterar-senha", permitAll)
-//                authorize("/{hash}", permitAll)
-//                authorize("/v3/api-docs/**", permitAll)
-//                authorize("/swagger-ui.html", permitAll)
-//                authorize("/swagger-ui/**", permitAll)
-//                authorize(anyRequest, authenticated)
-//            }
-//            http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
-//            sessionManagement {
-//                sessionCreationPolicy = SessionCreationPolicy.STATELESS
-//            }
-//            headers { frameOptions { disable() } }
-//            httpBasic { }
-//        }
-//        return http.build()
-//    }
+    @Bean
+    fun configure(http: HttpSecurity): SecurityFilterChain {
+
+        http.invoke {
+            csrf { disable() }
+            authorizeRequests {
+                authorize("/h2-console/**", permitAll)
+                authorize("/login", permitAll)
+                authorize("/usuarios/cadastro", permitAll)
+                authorize("/usuarios/codigo-senha", permitAll)
+                authorize("/usuarios/alterar-senha", permitAll)
+                authorize("/{hash}", permitAll)
+                authorize("/v3/api-docs/**", permitAll)
+                authorize("/swagger-ui.html", permitAll)
+                authorize("/swagger-ui/**", permitAll)
+                authorize(anyRequest, permitAll)
+            }
+            http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
+            sessionManagement {
+                sessionCreationPolicy = SessionCreationPolicy.STATELESS
+            }
+            headers { frameOptions { disable() } }
+            httpBasic { }
+        }
+        return http.build()
+    }
 //
 //    @Bean
 //    fun encoder(): PasswordEncoder {
