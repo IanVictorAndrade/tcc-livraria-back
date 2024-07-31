@@ -10,18 +10,19 @@ services:
       POSTGRES_PASSWORD: admin@123
       POSTGRES_DB: livraria
 
-  back:
-    image:
-      ianvictor/livraria:v3.0
-    container_name: livraria_back
-    environment:
-      - JWT_SECRET=12345678
-    env_file:
-      - livraria-back.env
-    ports:
-      - "8080:8080"
-    depends_on:
-      - banco
+#  back:
+#    build:
+#        context: ../
+#        dockerfile: Dockerfile
+#    container_name: livraria_back
+#    environment:
+#      - JWT_SECRET=12345678
+#    env_file:
+#      - livraria-back.env
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - banco
 
 networks:
   default:
