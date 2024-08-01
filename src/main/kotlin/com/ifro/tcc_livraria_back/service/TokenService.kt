@@ -14,10 +14,10 @@ import java.time.ZoneOffset
 
 
 @Service
-class TokenService {
+class TokenService(
+    @Value(value = "\${api.security.token.secret}") private val secret: String
+) {
 
-    @Value(value = "\${api.security.token.secret}")
-    private val secret: String = ""
 
     fun gerarToken(usuario: Usuario): String? {
         return try {

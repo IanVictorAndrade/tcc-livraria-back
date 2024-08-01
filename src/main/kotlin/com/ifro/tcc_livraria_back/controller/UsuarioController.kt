@@ -75,10 +75,10 @@ class UsuarioController(
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody @Valid dados: DadosAutenticacao): ResponseEntity<DadosTokenJwt> {
+    fun login(@RequestBody @Valid dados: DadosAutenticacao): ResponseEntity<Any> {
         val token = UsernamePasswordAuthenticationToken(dados.email, dados.senha)
         val autenticador = authenticationManager?.authenticate(token)
-        val tokenJWT = tokenService.gerarToken(autenticador?.principal as Usuario) ?: throw LivrariaException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao gerar token")
+        val tokenJWT: String = tokenService.gerarToken(autenticador?.principal as Usuario) ?: throw LivrariaException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao gerar token")
         return ResponseEntity.ok(DadosTokenJwt(tokenJWT))
     }
 

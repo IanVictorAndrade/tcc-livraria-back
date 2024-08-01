@@ -1,5 +1,6 @@
 package com.ifro.tcc_livraria_back.config.seguranca
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -11,7 +12,6 @@ import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
@@ -21,6 +21,7 @@ class SecurityConfiguration(
     private val securityFilter: SecurityFilter,
     private val userDetailsService: UserDetailsService
 ) {
+
     @Bean
     fun passwordEncoder() : BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
@@ -33,15 +34,15 @@ class SecurityConfiguration(
             csrf { disable() }
             authorizeRequests {
                 authorize("/h2-console/**", permitAll)
-                authorize("/login", permitAll)
-                authorize("/usuarios/cadastro", permitAll)
-                authorize("/usuarios/codigo-senha", permitAll)
-                authorize("/usuarios/alterar-senha", permitAll)
+                authorize("usuario/login", permitAll)
+                authorize("/usuario/cadastro", permitAll)
+                authorize("/usuario/codigo-senha", permitAll)
+                authorize("/usuario/alterar-senha", permitAll)
                 authorize("/{hash}", permitAll)
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/swagger-ui.html", permitAll)
                 authorize("/swagger-ui/**", permitAll)
-                authorize(anyRequest, permitAll)
+                authorize(anyRequest, authenticated)
             }
             http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
             sessionManagement {
@@ -54,16 +55,12 @@ class SecurityConfiguration(
     }
 
     @Bean
-    fun encoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
-
-    @Bean
     @Throws(Exception::class)
     fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager? {
         return authenticationConfiguration.authenticationManager
     }
 
+    @Autowired
     fun configure(auth: AuthenticationManagerBuilder?) {
         auth?.userDetailsService(userDetailsService)?.passwordEncoder(BCryptPasswordEncoder())
     }

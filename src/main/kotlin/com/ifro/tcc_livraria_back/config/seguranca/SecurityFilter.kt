@@ -15,6 +15,7 @@ class SecurityFilter(private val tokenService: TokenService,
                      private val usuarioRepository: UsuarioRepository
 ) : OncePerRequestFilter() {
 
+    @Override
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -24,20 +25,17 @@ class SecurityFilter(private val tokenService: TokenService,
 
         if (tokenJwt != null) {
             val subject = tokenService.getSubject(tokenJwt)
-            val usuario = usuarioRepository.findByEmail(subject)
+            val usuario = usuarioRepository.findUsuarioByEmail(subject)
 
-            val authentication = UsernamePasswordAuthenticationToken(usuario, null, usuario!!.authorities)
-
+            val authentication = UsernamePasswordAuthenticationToken(usuario, null, usuario.authorities)
             SecurityContextHolder.getContext().authentication = authentication
-
         }
-
 
         filterChain.doFilter(request, response)
     }
 
     private fun recuperarToken(request: HttpServletRequest): String? {
-        var authorization = request.getHeader("Authorization")
+        val authorization = request.getHeader("Authorization")
 
         if (authorization != null) {
             return authorization.replace("Bearer", "").trim()

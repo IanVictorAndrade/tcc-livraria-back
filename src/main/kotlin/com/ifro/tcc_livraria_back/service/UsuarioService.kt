@@ -6,6 +6,7 @@ import com.ifro.tcc_livraria_back.exception.LivrariaException
 import com.ifro.tcc_livraria_back.mapper.UsuarioMapper
 import com.ifro.tcc_livraria_back.model.Usuario
 import com.ifro.tcc_livraria_back.repository.UsuarioRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,9 +21,11 @@ import java.util.stream.Collectors
 class UsuarioService(
     private val usuarioRepository: UsuarioRepository,
     private val usuarioMapper: UsuarioMapper,
-    private val passwordEncoder: BCryptPasswordEncoder,
     private val javaMailSender: JavaMailSender
 ) {
+
+    @Autowired
+    private lateinit var passwordEncoder: BCryptPasswordEncoder
 
     @Value("\${spring.mail.username}")
     private val sender: String? = null
