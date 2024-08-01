@@ -4,8 +4,10 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTCreationException
 import com.auth0.jwt.exceptions.JWTVerificationException
+import com.ifro.tcc_livraria_back.exception.LivrariaException
 import com.ifro.tcc_livraria_back.model.Usuario
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -20,14 +22,15 @@ class TokenService {
     fun gerarToken(usuario: Usuario): String? {
         return try {
             val token = JWT.create()
-                .withIssuer("API EncurtadorURL")
+                .withIssuer("API Livraria Fábio")
                 .withSubject(usuario.email)
+                .withClaim("id", usuario.id)
                 .withExpiresAt(LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-04:00")))
                 .sign(Algorithm.HMAC256(secret))
 
             token
-        } catch (exception: JWTCreationException) {
-            throw RuntimeException("erro ao gerar token jwt", exception)
+        } catch (e: Exception) {
+            throw LivrariaException(HttpStatus.INTERNAL_SERVER_ERROR, "erro ao gerar token jwt")
         }
     }
 
@@ -35,12 +38,12 @@ class TokenService {
         try {
             val algoritmo = Algorithm.HMAC256(secret)
             return JWT.require(algoritmo)
-                .withIssuer("API EncurtadorURL")
+                .withIssuer("API Livraria Fábio")
                 .build()
                 .verify(tokenJWT)
                 .subject
-        } catch (exception: JWTVerificationException) {
-            throw java.lang.RuntimeException("Token JWT inválido ou expirado!")
+        } catch (e: Exception) {
+            throw LivrariaException(HttpStatus.BAD_REQUEST, "Token JWT inválido ou expirado!")
         }
     }
 

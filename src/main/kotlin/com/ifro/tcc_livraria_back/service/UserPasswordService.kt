@@ -48,7 +48,11 @@ class UserPasswordService(
 
         val usuario = usuarioRepository.findByEmail(dadosPublic.email) ?: throw LivrariaException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
         val tokenService = this.criarInstanciaPara(usuario)
-        tokenService.verifyToken(rawToken)
+        try {
+            tokenService.verifyToken(rawToken)
+        } catch (e: Exception) {
+            throw LivrariaException(HttpStatus.BAD_REQUEST, "Token inválido")
+        }
 
         usuario.senha = passwordEncoder.encode(novaSenha)
         usuarioRepository.save(usuario)
