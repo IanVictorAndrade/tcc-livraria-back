@@ -1,10 +1,16 @@
 package com.ifro.tcc_livraria_back.controller
 
+import com.ifro.tcc_livraria_back.dto.AlterarSenhaRequest
 import com.ifro.tcc_livraria_back.dto.DadosUsuario
+import com.ifro.tcc_livraria_back.dto.EmailRequest
+import com.ifro.tcc_livraria_back.exception.LivrariaException
 import com.ifro.tcc_livraria_back.model.Usuario
+import com.ifro.tcc_livraria_back.repository.UsuarioRepository
+import com.ifro.tcc_livraria_back.service.UserPasswordService
 import com.ifro.tcc_livraria_back.service.UsuarioService
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
+import lombok.RequiredArgsConstructor
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
@@ -14,8 +20,11 @@ import java.util.*
 
 @RestController
 @RequestMapping("/usuario")
+@RequiredArgsConstructor
 class UsuarioController(
-    private val usuarioService: UsuarioService
+    private val usuarioService: UsuarioService,
+    private val usuarioRepository: UsuarioRepository,
+    private val userPasswordService: UserPasswordService
 ) {
 
     @PostMapping("/cadastro")
@@ -57,13 +66,15 @@ class UsuarioController(
 
     @PostMapping("/codigo-senha")
     @Transactional
-    fun gerarToken(@RequestBody email: String): ResponseEntity<Any> {
-        return usuarioService.enviandoEmailDeRecuperacao(email)
+    fun gerarToken(@RequestBody email: EmailRequest): ResponseEntity<Any> {
+        val usuario: Usuario = usuarioRepository.findByEmail(email.email) ?: throw LivrariaException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
+        val token = userPasswordService.gerandoToken(usuario)
+        return usuarioService.enviandoEmailDeRecuperacao(email.email, token)
     }
 
-//    @PutMapping("/alterar-senha")
-//    @Transactional
-//    fun alterarSenha(@RequestBody request: AlterarSenhaRequest): String {
-//        return usuarioService.redefinirSenha(request.token, request.novaSenha)
-//    }
+    @PutMapping("/alterar-senha")
+    @Transactional
+    fun alterarSenha(@RequestBody request: AlterarSenhaRequest): ResponseEntity<String> {
+        return userPasswordService.trocarSenha(request.novaSenha, request.token)
+    }
 }

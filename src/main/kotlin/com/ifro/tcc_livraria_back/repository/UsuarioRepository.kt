@@ -4,6 +4,7 @@ import com.ifro.tcc_livraria_back.model.Usuario
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface UsuarioRepository : JpaRepository<Usuario, Long> {
-    fun findByEmail(email: String?): Usuario?
+
+    fun findByEmail(email: String): Usuario?
 
 }

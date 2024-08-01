@@ -61,35 +61,20 @@ class UsuarioService(
 
     fun buscarPorId(id: Long): Optional<Usuario> = usuarioRepository.findById(id)
 
-    fun enviandoEmailDeRecuperacao(email: String): ResponseEntity<Any> {
-        val emailConvertido = ObjectMapper().readTree(email)["email"].asText()
-
-        val usuario = usuarioRepository.findByEmail(emailConvertido)
-
-        if (usuario != null) {
-            val token = UUID.randomUUID().toString()
-//            usuario.token = token
-            usuarioRepository.save(usuario)
-
-
+    fun enviandoEmailDeRecuperacao(email: String, token: String): ResponseEntity<Any> {
             return try {
                 val mailMessage = SimpleMailMessage()
 
                 mailMessage.from = sender
-                mailMessage.setTo(emailConvertido)
+                mailMessage.setTo(email)
                 mailMessage.subject = "Recuperação de Senha"
                 mailMessage.text = "Seu token de recuperação é: $token"
 
                 javaMailSender.send(mailMessage)
-                ResponseEntity.ok("E-mail enviado com sucesso")
+                ResponseEntity.ok("E-mail enviado com sucesso!")
 
             } catch (e: Exception) {
                 throw LivrariaException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao enviar e-mail")
             }
-        } else {
-            throw LivrariaException(HttpStatus.NOT_FOUND, "Usuário não existe")
-        }
-
-
     }
 }
