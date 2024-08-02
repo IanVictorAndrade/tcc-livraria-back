@@ -8,7 +8,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 @Entity(name = "Usuario")
-@Table(name = "usuarios")
+@Table(name = "usuarios",
+       uniqueConstraints = [
+           UniqueConstraint(columnNames = ["email"]),
+           UniqueConstraint(columnNames = ["cpf"])
+       ])
 data class Usuario (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
