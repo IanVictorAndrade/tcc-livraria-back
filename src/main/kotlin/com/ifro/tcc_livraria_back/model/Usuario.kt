@@ -1,17 +1,14 @@
 package com.ifro.tcc_livraria_back.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 @Entity(name = "Usuario")
+@Table(name = "usuarios")
 data class Usuario (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +20,18 @@ data class Usuario (
     @NotBlank
     var email: String,
     @NotBlank
-    var senha: String
+    var senha: String,
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "usuarios_roles",
+        joinColumns = [JoinColumn(name = "usuario_id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id")]
+    )
+    var roles: Set<Role> = setOf()
 ) : UserDetails {
     @JsonIgnore
     override fun getAuthorities(): Collection<GrantedAuthority> {
-        return listOf(SimpleGrantedAuthority("ROLE_USER"))
+        return roles.map { SimpleGrantedAuthority(it.nome) }
     }
 
     @JsonIgnore

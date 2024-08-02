@@ -1,7 +1,9 @@
 package com.ifro.tcc_livraria_back.service
 
+import com.ifro.tcc_livraria_back.dto.UsuarioDTO
 import com.ifro.tcc_livraria_back.exception.LivrariaException
 import com.ifro.tcc_livraria_back.model.Usuario
+import com.ifro.tcc_livraria_back.repository.RoleRepository
 import com.ifro.tcc_livraria_back.repository.UsuarioRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -16,6 +18,7 @@ import java.util.*
 @Service
 class UsuarioService(
     private val usuarioRepository: UsuarioRepository,
+    private val roleRepository: RoleRepository,
     private val javaMailSender: JavaMailSender
 ) {
 
@@ -25,9 +28,11 @@ class UsuarioService(
     @Value("\${spring.mail.username}")
     private val sender: String? = null
 
-    fun cadastrar(user: Usuario) {
+    fun cadastrar(user: UsuarioDTO) {
 
         val usuario = Usuario(0, "", "", "", "")
+        val role = roleRepository.findByNome(user.role)
+            ?: throw LivrariaException(HttpStatus.BAD_REQUEST, "Role não encontrada")
 
 
         if (user.id != 0L) {
@@ -40,7 +45,7 @@ class UsuarioService(
         usuario.senha = passwordEncoder.encode(user.senha)
         usuario.cpf = user.cpf
         usuario.nome = user.nome
-
+        usuario.roles = setOf(role)
 
 
         val existeUsuario = usuarioRepository.findByEmail(user.email)

@@ -4,14 +4,13 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 
-@Entity
-data class Administrador (
+@Entity(name = "Role")
+@Table(name = "roles")
+data class Role(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
-    val nome: String,
-    val cpf: String,
-    val email: String,
-    val senha: String
+    var id: Long,
+    var nome: String
 )

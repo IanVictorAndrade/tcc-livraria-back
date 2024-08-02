@@ -33,6 +33,9 @@ class SecurityConfiguration(
         http.invoke {
             csrf { disable() }
             authorizeRequests {
+                authorize("/usuario/listar", hasRole("ROLE_ADMIN"))
+                authorize("/usuario/editar", hasRole("ROLE_ADMIN"))
+                authorize("/usuario/deletar/{id}", hasRole("ROLE_ADMIN"))
                 authorize("/h2-console/**", permitAll)
                 authorize("/usuario/login", permitAll)
                 authorize("/usuario/cadastro", permitAll)

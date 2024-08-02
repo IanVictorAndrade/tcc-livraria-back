@@ -1,10 +1,6 @@
 package com.ifro.tcc_livraria_back.controller
 
-import com.ifro.tcc_livraria_back.dto.DadosAutenticacao
-import com.ifro.tcc_livraria_back.dto.AlterarSenhaRequest
-import com.ifro.tcc_livraria_back.dto.DadosTokenJwt
-import com.ifro.tcc_livraria_back.dto.DadosUsuario
-import com.ifro.tcc_livraria_back.dto.EmailRequest
+import com.ifro.tcc_livraria_back.dto.*
 import com.ifro.tcc_livraria_back.exception.LivrariaException
 import com.ifro.tcc_livraria_back.model.Usuario
 import com.ifro.tcc_livraria_back.repository.UsuarioRepository
@@ -39,7 +35,7 @@ class UsuarioController(
 
     @PostMapping("/cadastro")
     @Transactional
-    fun cadastrarUsuario(@RequestBody dados: Usuario, uriComponentsBuilder: UriComponentsBuilder): ResponseEntity<Any> {
+    fun cadastrarUsuario(@RequestBody dados: UsuarioDTO, uriComponentsBuilder: UriComponentsBuilder): ResponseEntity<Any> {
         usuarioService.cadastrar(dados)
         val uri = uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(dados.id).toUri()
         return ResponseEntity.created(uri).body("Usuário cadastrado com sucesso!")

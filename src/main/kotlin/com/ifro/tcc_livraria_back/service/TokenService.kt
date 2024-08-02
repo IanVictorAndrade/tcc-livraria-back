@@ -21,10 +21,14 @@ class TokenService(
 
     fun gerarToken(usuario: Usuario): String? {
         return try {
+
+            val roles = usuario.roles.map { it.nome }
+
             val token = JWT.create()
                 .withIssuer("API Livraria Fábio")
                 .withSubject(usuario.email)
                 .withClaim("id", usuario.id)
+                .withClaim("roles", roles)
                 .withExpiresAt(LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-04:00")))
                 .sign(Algorithm.HMAC256(secret))
 
