@@ -34,7 +34,7 @@ class SecurityConfiguration(
             csrf { disable() }
             authorizeRequests {
                 authorize("/h2-console/**", permitAll)
-                authorize("usuario/login", permitAll)
+                authorize("/usuario/login", permitAll)
                 authorize("/usuario/cadastro", permitAll)
                 authorize("/usuario/codigo-senha", permitAll)
                 authorize("/usuario/alterar-senha", permitAll)

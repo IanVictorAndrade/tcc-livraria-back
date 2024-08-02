@@ -39,7 +39,7 @@ class UsuarioController(
 
     @PostMapping("/cadastro")
     @Transactional
-    fun cadastrarUsuario(@RequestBody dados: DadosUsuario, uriComponentsBuilder: UriComponentsBuilder): ResponseEntity<Any> {
+    fun cadastrarUsuario(@RequestBody dados: Usuario, uriComponentsBuilder: UriComponentsBuilder): ResponseEntity<Any> {
         usuarioService.cadastrar(dados)
         val uri = uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(dados.id).toUri()
         return ResponseEntity.created(uri).body("Usuário cadastrado com sucesso!")
@@ -47,7 +47,7 @@ class UsuarioController(
 
     @GetMapping("/listar")
     @SecurityRequirement(name = "bearer-key")
-    fun listarUsuarios(): ResponseEntity<List<DadosUsuario>> {
+    fun listarUsuarios(): ResponseEntity<List<Usuario?>> {
         val lista = usuarioService.listar()
         return ResponseEntity.ok(lista)
     }
@@ -61,9 +61,9 @@ class UsuarioController(
     @PutMapping("/editar")
     @Transactional
     @SecurityRequirement(name = "bearer-key")
-    fun editarUsuario(@RequestBody user: DadosUsuario): ResponseEntity<String> {
+    fun editarUsuario(@RequestBody user: Usuario): ResponseEntity<String> {
         usuarioService.edita(user)
-        return ResponseEntity.ok("Usuário Editado com sucesso!")
+        return ResponseEntity.ok("Usuário Editado com sucesso! $user")
     }
 
     @DeleteMapping("deletar/{id}")

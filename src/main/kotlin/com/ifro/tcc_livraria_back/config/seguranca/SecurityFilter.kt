@@ -1,10 +1,12 @@
 package com.ifro.tcc_livraria_back.config.seguranca
 
+import com.ifro.tcc_livraria_back.exception.LivrariaException
 import com.ifro.tcc_livraria_back.repository.UsuarioRepository
 import com.ifro.tcc_livraria_back.service.TokenService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -25,12 +27,11 @@ class SecurityFilter(private val tokenService: TokenService,
 
         if (tokenJwt != null) {
             val subject = tokenService.getSubject(tokenJwt)
-            val usuario = usuarioRepository.findUsuarioByEmail(subject)
+            val usuario = usuarioRepository.findUsuarioByEmail(subject) ?: throw LivrariaException(HttpStatus.NOT_FOUND, "Usuário com esse token não foi encontrado")
 
             val authentication = UsernamePasswordAuthenticationToken(usuario, null, usuario.authorities)
             SecurityContextHolder.getContext().authentication = authentication
         }
-
         filterChain.doFilter(request, response)
     }
 
