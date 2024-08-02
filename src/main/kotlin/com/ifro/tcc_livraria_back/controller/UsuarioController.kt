@@ -63,7 +63,7 @@ class UsuarioController(
     @SecurityRequirement(name = "bearer-key")
     fun editarUsuario(@RequestBody user: Usuario): ResponseEntity<String> {
         usuarioService.edita(user)
-        return ResponseEntity.ok("Usuário Editado com sucesso! $user")
+        return ResponseEntity.ok("Usuário Editado com sucesso!")
     }
 
     @DeleteMapping("deletar/{id}")
