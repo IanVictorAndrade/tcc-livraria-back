@@ -30,28 +30,27 @@ class UsuarioService(
 
     fun cadastrar(user: UsuarioDTO) {
 
-        val usuario = Usuario(0, "", "", "", "")
         val role = roleRepository.findByNome(user.role)
             ?: throw LivrariaException(HttpStatus.BAD_REQUEST, "Role não encontrada")
-
 
         if (user.id != 0L) {
             throw LivrariaException(HttpStatus.INTERNAL_SERVER_ERROR, "campo id tem que ser 0")
         }
+        val existeUsuarioPorEmail = usuarioRepository.findByEmail(user.email) != null
+        val existeUsuarioPorCpf = usuarioRepository.findByCpf(user.cpf) != null
 
+        if (existeUsuarioPorEmail || existeUsuarioPorCpf) throw LivrariaException(HttpStatus.BAD_REQUEST, "E-mail ou CPF já cadastrado")
 
-        usuario.id = 0L
-        usuario.email = user.email
-        usuario.senha = passwordEncoder.encode(user.senha)
-        usuario.cpf = user.cpf
-        usuario.nome = user.nome
-        usuario.roles = setOf(role)
+        val usuario = Usuario(
+            id = 0L,
+            email = user.email,
+            senha = passwordEncoder.encode(user.senha),
+            cpf = user.cpf,
+            nome = user.nome,
+            roles = setOf(role)
+        )
 
-
-        val existeUsuario = usuarioRepository.findByEmail(user.email)
-        if (existeUsuario == null) {
-            usuarioRepository.save(usuario)
-        }
+        usuarioRepository.save(usuario)
     }
 
     fun listar(): List<Usuario?>? = usuarioRepository.findAll()
