@@ -45,7 +45,7 @@ class SecurityConfiguration(
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/swagger-ui.html", permitAll)
                 authorize("/swagger-ui/**", permitAll)
-                authorize(anyRequest, authenticated)
+                authorize(anyRequest, permitAll)
             }
             http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
             sessionManagement {
