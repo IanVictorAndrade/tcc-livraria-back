@@ -3,12 +3,15 @@ package com.ifro.tcc_livraria_back.api
 import com.mercadopago.MercadoPagoConfig
 import com.mercadopago.client.preference.*
 import com.mercadopago.resources.preference.Preference
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import java.math.BigDecimal
 
+@Configuration
 class ApiMercadoPago {
 
     init {
-        MercadoPagoConfig.setAccessToken("YOUR_ACCESS_TOKEN")
+        MercadoPagoConfig.setAccessToken("TEST-2968039211870550-080607-86bc28bdde12c632c52bb31dc368f3d4-2751690")
     }
 
     private val client = PreferenceClient()
@@ -27,15 +30,15 @@ class ApiMercadoPago {
             PreferenceBackUrlsRequest.builder()
                 .success("http://yourwebsite.com/success")
                 .failure("http://yourwebsite.com/failure")
-                .pending("http://yourwebsite.com/pending")
                 .build()
         )
         .autoReturn("approved")
         .build()
 
-    val preference: Preference = client.create(preferenceRequest)
+    private val preference: Preference = client.create(preferenceRequest)
 
-    fun printPaymentUrl() {
-        println("Payment URL: ${preference.initPoint}")  // URL para redirecionar o usuário para o Mercado Pago
+    @Bean
+    fun getPreferenceInitPoint(): String {
+        return preference.initPoint
     }
 }
