@@ -1,6 +1,7 @@
 package com.ifro.tcc_livraria_back.controller
 
 import com.ifro.tcc_livraria_back.exception.LivrariaException
+import com.ifro.tcc_livraria_back.repository.LivroRepository
 import com.ifro.tcc_livraria_back.service.GoogleService
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
@@ -12,18 +13,20 @@ import java.io.File
 @RestController
 @RequestMapping("/google-drive")
 class GoogleDriveController(
-    private val googleService: GoogleService
+    private val googleService: GoogleService,
+    private val livroRepository: LivroRepository
 ) {
 
-    @PostMapping("/upload")
-    fun handleFileUpload(@RequestParam ("file") file: MultipartFile): ResponseEntity<Any> {
+    @PostMapping("/upload/{idLivro}")
+    fun handleFileUpload(@RequestParam ("file") file: MultipartFile, @PathVariable idLivro: Long): ResponseEntity<Any> {
         if (file.isEmpty) {
             throw LivrariaException(HttpStatus.BAD_REQUEST, "Arquivo vazio")
         }
+        val livro = livroRepository.findById(idLivro).orElseThrow { LivrariaException(HttpStatus.NOT_FOUND, "Livro não encontrado") }
         val tempFile: File = File.createTempFile("file", file.originalFilename)
         file.transferTo(tempFile)
-        googleService.uploadFile(tempFile)
-        return ResponseEntity.ok(file.originalFilename)
+        googleService.uploadFile(tempFile, livro)
+        return ResponseEntity.ok("Arquivo enviado com sucesso")
     }
 
     @GetMapping("/listarArquivos")
