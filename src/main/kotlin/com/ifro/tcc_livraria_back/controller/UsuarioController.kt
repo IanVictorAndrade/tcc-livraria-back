@@ -37,18 +37,15 @@ class UsuarioController(
 
     @PostMapping("/cadastro")
     @Transactional
-    fun cadastrarUsuario(@RequestBody dados: UsuarioDTO, uriComponentsBuilder: UriComponentsBuilder): ResponseEntity<Any> {
+    fun cadastrarUsuario(@RequestBody dados: Usuario, uriComponentsBuilder: UriComponentsBuilder): ResponseEntity<Any> {
         usuarioService.cadastrar(dados)
-        val uri = uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(dados.id).toUri()
+        val uri = uriComponentsBuilder.path("/usuario/{id}").buildAndExpand(dados.id).toUri()
         return ResponseEntity.created(uri).body("Usuário cadastrado com sucesso!")
     }
 
     @GetMapping("/listar")
     @SecurityRequirement(name = "bearer-key")
-    fun listarUsuarios(): ResponseEntity<List<Usuario?>> {
-        val lista = usuarioService.listar()
-        return ResponseEntity.ok(lista)
-    }
+    fun listarUsuarios(): ResponseEntity<List<Usuario?>> = ResponseEntity.ok(usuarioService.listar())
 
     @GetMapping("/print")
     fun print(): String {
@@ -61,11 +58,11 @@ class UsuarioController(
         return usuarioService.buscarPorId(id)
     }
 
-    @PutMapping("/editar")
+    @PutMapping("/editar/{id}")
     @Transactional
     @SecurityRequirement(name = "bearer-key")
-    fun editarUsuario(@RequestBody user: Usuario): ResponseEntity<String> {
-        usuarioService.edita(user)
+    fun editarUsuario(@RequestBody usuario: UsuarioDTO, @PathVariable id: Long): ResponseEntity<String> {
+        usuarioService.edita(id, usuario)
         return ResponseEntity.ok("Usuário Editado com sucesso!")
     }
 

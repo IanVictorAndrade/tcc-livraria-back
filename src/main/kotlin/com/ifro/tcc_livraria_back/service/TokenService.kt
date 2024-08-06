@@ -2,8 +2,6 @@ package com.ifro.tcc_livraria_back.service
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.auth0.jwt.exceptions.JWTCreationException
-import com.auth0.jwt.exceptions.JWTVerificationException
 import com.ifro.tcc_livraria_back.exception.LivrariaException
 import com.ifro.tcc_livraria_back.model.Usuario
 import org.springframework.beans.factory.annotation.Value
@@ -22,7 +20,7 @@ class TokenService(
     fun gerarToken(usuario: Usuario): String? {
         return try {
 
-            val roles = usuario.roles.map { it.nome }
+            val roles = usuario.role.map { it.nome }
 
             val token = JWT.create()
                 .withIssuer("API Livraria Fábio")

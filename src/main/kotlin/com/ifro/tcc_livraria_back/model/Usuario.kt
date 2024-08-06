@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails
 data class Usuario (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long,
+    var id: Long = 0,
     @NotBlank
     var nome: String,
     @NotBlank
@@ -31,11 +31,11 @@ data class Usuario (
         joinColumns = [JoinColumn(name = "usuario_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    var roles: Set<Role> = setOf()
+    var role: MutableSet<Role> = mutableSetOf()
 ) : UserDetails {
     @JsonIgnore
     override fun getAuthorities(): Collection<GrantedAuthority> {
-        return roles.map { SimpleGrantedAuthority(it.nome) }
+        return role.map { SimpleGrantedAuthority(it.nome) }
     }
 
     @JsonIgnore

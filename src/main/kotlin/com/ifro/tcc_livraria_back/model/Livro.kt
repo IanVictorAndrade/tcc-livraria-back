@@ -10,11 +10,11 @@ data class Livro (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_livro")
-    val id: Long,
-    val titulo: String,
-    val autor: String,
-    val ano: Date,
-    val preco: Double,
+    val id: Long = 0,
+    var titulo: String,
+    var autor: String,
+    var ano: Date,
+    var preco: Double,
     @OneToOne
     @JoinColumn(name = "id_arquivo_livro")
     @JsonIgnore

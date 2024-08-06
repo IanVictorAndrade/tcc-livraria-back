@@ -2,6 +2,7 @@ package com.ifro.tcc_livraria_back.service
 
 import com.ifro.tcc_livraria_back.dto.UsuarioDTO
 import com.ifro.tcc_livraria_back.exception.LivrariaException
+import com.ifro.tcc_livraria_back.model.Role
 import com.ifro.tcc_livraria_back.model.Usuario
 import com.ifro.tcc_livraria_back.repository.RoleRepository
 import com.ifro.tcc_livraria_back.repository.UsuarioRepository
@@ -28,26 +29,22 @@ class UsuarioService(
     @Value("\${spring.mail.username}")
     private val sender: String? = null
 
-    fun cadastrar(user: UsuarioDTO) {
+    fun cadastrar(user: Usuario) {
 
-        val role = roleRepository.findByNome(user.role)
+        val role = roleRepository.findByNome(user.role.first().nome)
             ?: throw LivrariaException(HttpStatus.BAD_REQUEST, "Role não encontrada")
 
-        if (user.id != 0L) {
-            throw LivrariaException(HttpStatus.INTERNAL_SERVER_ERROR, "campo id tem que ser 0")
-        }
         val existeUsuarioPorEmail = usuarioRepository.findByEmail(user.email) != null
         val existeUsuarioPorCpf = usuarioRepository.findByCpf(user.cpf) != null
 
         if (existeUsuarioPorEmail || existeUsuarioPorCpf) throw LivrariaException(HttpStatus.BAD_REQUEST, "E-mail ou CPF já cadastrado")
 
         val usuario = Usuario(
-            id = 0L,
             email = user.email,
             senha = passwordEncoder.encode(user.senha),
             cpf = user.cpf,
             nome = user.nome,
-            roles = setOf(role)
+            role = mutableSetOf(role)
         )
 
         usuarioRepository.save(usuario)
@@ -55,12 +52,17 @@ class UsuarioService(
 
     fun listar(): List<Usuario?>? = usuarioRepository.findAll()
 
-    fun edita(user: Usuario) {
-        val usuarioDB = usuarioRepository.findById(user.id).orElseThrow { LivrariaException(HttpStatus.NOT_FOUND, "usuário não encontrado") }
+    fun edita(id: Long, user: UsuarioDTO) {
+        val usuarioDB = usuarioRepository.findById(id).orElseThrow { LivrariaException(HttpStatus.NOT_FOUND, "usuário não encontrado") }
         usuarioDB.email = user.email
         usuarioDB.senha = passwordEncoder.encode(user.senha)
         usuarioDB.cpf = user.cpf
         usuarioDB.nome = user.nome
+        // Atualiza o role do usuário
+        if (user.role != null) {
+            val role = roleRepository.findByNome(user.role.nome) ?: throw LivrariaException(HttpStatus.BAD_REQUEST, "Role não encontrada")
+                usuarioDB.role = mutableSetOf(role)
+        }
         usuarioRepository.save(usuarioDB)
     }
 

@@ -34,18 +34,17 @@ class SecurityConfiguration(
             csrf { disable() }
             authorizeRequests {
                 authorize("/usuario/listar", hasRole("ROLE_ADMIN"))
-                authorize("/usuario/editar", hasRole("ROLE_ADMIN"))
+                authorize("/usuario/editar/{id}", hasRole("ROLE_ADMIN"))
                 authorize("/usuario/deletar/{id}", hasRole("ROLE_ADMIN"))
                 authorize("/h2-console/**", permitAll)
                 authorize("/usuario/login", permitAll)
                 authorize("/usuario/cadastro", permitAll)
                 authorize("/usuario/codigo-senha", permitAll)
                 authorize("/usuario/alterar-senha", permitAll)
-                authorize("/{hash}", permitAll)
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/swagger-ui.html", permitAll)
                 authorize("/swagger-ui/**", permitAll)
-                authorize(anyRequest, permitAll)
+                authorize(anyRequest, authenticated)
             }
             http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
             sessionManagement {
