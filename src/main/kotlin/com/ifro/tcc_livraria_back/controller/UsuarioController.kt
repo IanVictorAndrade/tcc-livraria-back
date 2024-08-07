@@ -1,6 +1,6 @@
 package com.ifro.tcc_livraria_back.controller
 
-import com.ifro.tcc_livraria_back.api.ApiMercadoPago
+import com.ifro.tcc_livraria_back.service.MercadoPagoService
 import com.ifro.tcc_livraria_back.dto.*
 import com.ifro.tcc_livraria_back.exception.LivrariaException
 import com.ifro.tcc_livraria_back.model.Usuario
@@ -29,7 +29,6 @@ class UsuarioController(
     private val usuarioRepository: UsuarioRepository,
     private val userPasswordService: UserPasswordService,
     private val tokenService: TokenService,
-    private val apiMercadoPago: ApiMercadoPago
 ) {
 
     @Autowired
@@ -46,11 +45,6 @@ class UsuarioController(
     @GetMapping("/listar")
     @SecurityRequirement(name = "bearer-key")
     fun listarUsuarios(): ResponseEntity<List<Usuario?>> = ResponseEntity.ok(usuarioService.listar())
-
-    @GetMapping("/print")
-    fun print(): String {
-        return apiMercadoPago.getPreferenceInitPoint()
-    }
 
     @GetMapping("/{id}")
     @SecurityRequirement(name = "bearer-key")
