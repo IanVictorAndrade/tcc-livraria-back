@@ -26,7 +26,6 @@ class SecurityConfiguration(
     fun passwordEncoder() : BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
-
     @Bean
     fun configure(http: HttpSecurity): SecurityFilterChain {
 
@@ -36,6 +35,10 @@ class SecurityConfiguration(
                 authorize("/usuario/listar", hasRole("ROLE_ADMIN"))
                 authorize("/usuario/editar/{id}", hasRole("ROLE_ADMIN"))
                 authorize("/usuario/deletar/{id}", hasRole("ROLE_ADMIN"))
+                authorize("/livro/editar/{id}", hasRole("ROLE_ADMIN"))
+                authorize("/livro/deletar/{id}", hasRole("ROLE_ADMIN"))
+                authorize("/livro/cadastrar", hasRole("ROLE_ADMIN"))
+                authorize("/livro/listar", hasRole("ROLE_ADMIN"))
                 authorize("/h2-console/**", permitAll)
                 authorize("/usuario/login", permitAll)
                 authorize("/usuario/cadastro", permitAll)

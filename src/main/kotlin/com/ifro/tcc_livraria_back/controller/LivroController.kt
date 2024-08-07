@@ -4,6 +4,7 @@ import com.ifro.tcc_livraria_back.dto.DadosLivroDTO
 import com.ifro.tcc_livraria_back.model.Livro
 import com.ifro.tcc_livraria_back.service.LivroService
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,7 +26,7 @@ class LivroController(
     ) : ResponseEntity<String> {
         livroService.cadastrarLivro(livro)
         val uri = uriComponentsBuilder.path("/livro/{id}").buildAndExpand(livro.id).toUri()
-        return ResponseEntity.created(uri).body("Usuário cadastrado com sucesso!")
+        return ResponseEntity.created(uri).body("Livro cadastrado com sucesso!")
     }
 
     @GetMapping("/listar")

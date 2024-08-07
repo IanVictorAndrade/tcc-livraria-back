@@ -24,7 +24,7 @@ class LivroService(
         livroRepository.save(livroDB)
     }
 
-    fun listarLivros() = livroRepository.findAll()
+    fun listarLivros(): List<Livro> = livroRepository.findAll()
 
     fun editarLivro(livro: DadosLivroDTO, id: Long) {
         val livroDB = livroRepository.findById(id).orElseThrow { LivrariaException(HttpStatus.NOT_FOUND, "livro não encontrado") }
