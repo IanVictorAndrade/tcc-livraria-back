@@ -5,6 +5,6 @@ import java.util.Date
 data class DadosLivroDTO (
     val titulo: String,
     val autor: String,
-    val ano: Date,
+    val ano: Long,
     val preco: Double
 )

@@ -13,11 +13,11 @@ data class Livro (
     val id: Long = 0,
     var titulo: String,
     var autor: String,
-    var ano: Date,
+    var ano: Long,
     var preco: Double,
     @OneToOne
     @JoinColumn(name = "id_arquivo_livro")
-    @JsonIgnore
     @JsonManagedReference
+    @JsonIgnore
     var arquivoLivro: ArquivoLivro? = null
 )
