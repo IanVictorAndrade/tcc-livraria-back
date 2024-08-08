@@ -29,10 +29,9 @@ class UsuarioService(
     @Value("\${spring.mail.username}")
     private val sender: String? = null
 
-    fun cadastrar(user: Usuario) {
+    fun cadastrar(user: UsuarioDTO) {
 
-        val role = roleRepository.findByNome(user.role.first().nome)
-            ?: throw LivrariaException(HttpStatus.BAD_REQUEST, "Role não encontrada")
+        val role = roleRepository.findByNome(user.role!!.nome) ?: throw LivrariaException(HttpStatus.BAD_REQUEST, "Role não encontrada")
 
         val existeUsuarioPorEmail = usuarioRepository.findByEmail(user.email) != null
         val existeUsuarioPorCpf = usuarioRepository.findByCpf(user.cpf) != null
@@ -40,10 +39,10 @@ class UsuarioService(
         if (existeUsuarioPorEmail || existeUsuarioPorCpf) throw LivrariaException(HttpStatus.BAD_REQUEST, "E-mail ou CPF já cadastrado")
 
         val usuario = Usuario(
-            email = user.email,
-            senha = passwordEncoder.encode(user.senha),
-            cpf = user.cpf,
             nome = user.nome,
+            cpf = user.cpf,
+            email = user.email,
+            senha = user.senha,
             role = mutableSetOf(role)
         )
 

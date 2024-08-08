@@ -36,9 +36,10 @@ class UsuarioController(
 
     @PostMapping("/cadastro")
     @Transactional
-    fun cadastrarUsuario(@RequestBody dados: Usuario, uriComponentsBuilder: UriComponentsBuilder): ResponseEntity<Any> {
+    fun cadastrarUsuario(@RequestBody dados: UsuarioDTO, uriComponentsBuilder: UriComponentsBuilder): ResponseEntity<Any> {
         usuarioService.cadastrar(dados)
-        val uri = uriComponentsBuilder.path("/usuario/{id}").buildAndExpand(dados.id).toUri()
+        val usuario: Usuario = usuarioRepository.findByCpf(dados.cpf) ?: throw LivrariaException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
+        val uri = uriComponentsBuilder.path("/usuario/{id}").buildAndExpand(usuario.id).toUri()
         return ResponseEntity.created(uri).body("Usuário cadastrado com sucesso!")
     }
 
