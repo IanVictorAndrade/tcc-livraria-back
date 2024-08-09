@@ -16,6 +16,11 @@ data class Livro (
     var ano: Long,
     var preco: Double,
     @OneToOne
+    @JoinColumn(name = "id_imagem")
+    @JsonManagedReference
+    @JsonIgnore
+    var imagem: Imagem? = null,
+    @OneToOne
     @JoinColumn(name = "id_arquivo_livro")
     @JsonManagedReference
     @JsonIgnore

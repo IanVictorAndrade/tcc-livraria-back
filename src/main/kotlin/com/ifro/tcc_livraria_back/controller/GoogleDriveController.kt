@@ -25,8 +25,8 @@ class GoogleDriveController(
         val livro = livroRepository.findById(idLivro).orElseThrow { LivrariaException(HttpStatus.NOT_FOUND, "Livro não encontrado") }
         val tempFile: File = File.createTempFile("file", file.originalFilename)
         file.transferTo(tempFile)
-        googleService.uploadFile(tempFile, livro)
-        return ResponseEntity.ok("Arquivo enviado com sucesso")
+        val arquivoEnviado = googleService.uploadFile(tempFile, livro)
+        return ResponseEntity.ok("Arquivo enviado com sucesso!! Detalhes: $arquivoEnviado")
     }
 
     @GetMapping("/listarArquivos")

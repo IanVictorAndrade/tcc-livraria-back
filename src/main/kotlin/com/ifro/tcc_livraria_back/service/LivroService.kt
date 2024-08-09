@@ -3,13 +3,15 @@ package com.ifro.tcc_livraria_back.service
 import com.ifro.tcc_livraria_back.dto.DadosLivroDTO
 import com.ifro.tcc_livraria_back.exception.LivrariaException
 import com.ifro.tcc_livraria_back.model.Livro
+import com.ifro.tcc_livraria_back.repository.ImagemRepository
 import com.ifro.tcc_livraria_back.repository.LivroRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
 @Service
 class LivroService(
-    private val livroRepository: LivroRepository
+    private val livroRepository: LivroRepository,
+    private val imagemRepository: ImagemRepository
 ) {
     fun cadastrarLivro(livro: Livro) {
         val existeLivro = livroRepository.existsById(livro.id)
@@ -35,5 +37,7 @@ class LivroService(
         livroRepository.save(livroDB)
     }
 
-    fun deletarLivro(id: Long) = livroRepository.deleteById(id)
+    fun deletarLivro(id: Long) {
+        livroRepository.deleteById(id)
+    }
 }

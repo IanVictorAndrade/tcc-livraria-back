@@ -64,7 +64,7 @@ class GoogleService(
             livroRepository.save(livro)
 
             if (file.exists()) file.delete()
-            return fileUrl
+            return "${fileUrl}, ${uploadedFile.id}"
         } catch (e: Exception) {
             throw LivrariaException(HttpStatus.INTERNAL_SERVER_ERROR, e.message!!)
         }

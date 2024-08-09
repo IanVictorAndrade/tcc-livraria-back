@@ -10,7 +10,6 @@ class MercadoPagoController(
     private val mercadoPagoService: MercadoPagoService
 ) {
 
-
     @PostMapping("/link-pagamento")
     fun linkPagamento(
         @RequestBody item: PreferenceItemRequest
