@@ -17,3 +17,4 @@ class MercadoPagoController(
         return mercadoPagoService.linkPagamento(item)
     }
 }
+

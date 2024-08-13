@@ -20,6 +20,7 @@ class LivroService(
         val livroDB = Livro(
             titulo = livro.titulo,
             autor = livro.autor,
+            descricao = livro.descricao,
             ano = livro.ano,
             preco = livro.preco
         )
@@ -32,6 +33,7 @@ class LivroService(
         val livroDB = livroRepository.findById(id).orElseThrow { LivrariaException(HttpStatus.NOT_FOUND, "livro não encontrado") }
         livroDB.preco = livro.preco
         livroDB.ano = livro.ano
+        livroDB.descricao = livro.descricao
         livroDB.titulo = livro.titulo
         livroDB.autor = livro.autor
         livroRepository.save(livroDB)

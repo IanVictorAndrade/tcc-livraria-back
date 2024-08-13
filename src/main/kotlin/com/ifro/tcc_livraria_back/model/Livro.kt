@@ -13,6 +13,8 @@ data class Livro (
     val id: Long = 0,
     var titulo: String,
     var autor: String,
+    @Column(name = "descricao_livro" , columnDefinition = "TEXT")
+    var descricao: String,
     var ano: Long,
     var preco: Double,
     @OneToOne

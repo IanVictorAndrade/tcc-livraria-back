@@ -40,7 +40,7 @@ class SecurityConfiguration(
                 authorize("/livro/cadastrar", hasRole("ROLE_ADMIN"))
                 authorize("/livro/listar", hasRole("ROLE_ADMIN"))
                 authorize("/livro/enviarImagem/{idLivro}", hasRole("ROLE_ADMIN"))
-//                authorize("/livro/imagem/{id}", hasRole("ROLE_ADMIN"))
+                authorize("/livro/imagem/{id}", hasRole("ROLE_ADMIN"))
                 authorize("/h2-console/**", permitAll)
                 authorize("/usuario/login", permitAll)
                 authorize("/usuario/cadastro", permitAll)
