@@ -41,6 +41,8 @@ class SecurityConfiguration(
                 authorize("/livro/listar", hasRole("ROLE_ADMIN"))
                 authorize("/livro/enviarImagem/{idLivro}", hasRole("ROLE_ADMIN"))
                 authorize("/livro/imagem/{id}", hasRole("ROLE_ADMIN"))
+                authorize("/mercado-pago/link-pagamento", permitAll)
+                authorize("/mercado-pago/link-pagamento-teste", permitAll)
                 authorize("/h2-console/**", permitAll)
                 authorize("/usuario/login", permitAll)
                 authorize("/usuario/cadastro", permitAll)
