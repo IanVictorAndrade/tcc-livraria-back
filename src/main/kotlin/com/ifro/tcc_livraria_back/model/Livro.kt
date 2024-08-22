@@ -27,4 +27,7 @@ data class Livro (
     @JsonManagedReference
     @JsonIgnore
     var arquivoLivro: ArquivoLivro? = null
-)
+) {
+    val imagemUrl: String?
+        get() = imagem?.let { "livro/imagem/${it.id}" }
+}

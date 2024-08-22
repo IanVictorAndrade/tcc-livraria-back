@@ -40,7 +40,7 @@ class SecurityConfiguration(
                 authorize("/livro/cadastrar", hasRole("ROLE_ADMIN"))
                 authorize("/livro/listar", hasRole("ROLE_ADMIN"))
                 authorize("/livro/enviarImagem/{idLivro}", hasRole("ROLE_ADMIN"))
-                authorize("/livro/imagem/{id}", hasRole("ROLE_ADMIN"))
+                authorize("/livro/imagem/{id}", permitAll)
                 authorize("/mercado-pago/link-pagamento", permitAll)
                 authorize("/mercado-pago/link-pagamento-teste", permitAll)
                 authorize("/h2-console/**", permitAll)
@@ -51,7 +51,7 @@ class SecurityConfiguration(
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/swagger-ui.html", permitAll)
                 authorize("/swagger-ui/**", permitAll)
-                authorize(anyRequest, permitAll)
+                authorize(anyRequest, authenticated)
             }
             http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
             sessionManagement {

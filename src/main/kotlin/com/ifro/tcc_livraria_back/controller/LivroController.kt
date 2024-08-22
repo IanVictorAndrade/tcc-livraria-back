@@ -65,7 +65,12 @@ class LivroController(
     @GetMapping("/imagem/{id}")
     fun buscarImagem(@PathVariable id: Long): ResponseEntity<ByteArray> {
         val imagemBuscada = imagemService.buscarImagem(id)
-        val mediaType = MediaType.IMAGE_PNG // Supondo que todas as imagens sejam PNG
+        val mediaType = when {
+            imagemBuscada.isPng() -> MediaType.IMAGE_PNG
+            imagemBuscada.isJpeg() -> MediaType.IMAGE_JPEG
+            imagemBuscada.isGif() -> MediaType.IMAGE_GIF
+            else -> MediaType.APPLICATION_OCTET_STREAM // Tipo genérico para outros formatos
+        }
 
         return ResponseEntity.ok()
             .contentType(mediaType)
@@ -77,4 +82,9 @@ class LivroController(
         val imagens: List<Imagem> = imagemService.listarImagens()
         return ResponseEntity.ok(imagens)
     }
+
+    // Funções de extensão para identificar o tipo de imagem (opcionais)
+    fun ByteArray.isPng() = this.size >= 8 && this[0] == 0x89.toByte() && this[1] == 0x50.toByte() && this[2] == 0x4E.toByte() && this[3] == 0x47.toByte()
+    fun ByteArray.isJpeg() = this.size >= 2 && this[0] == 0xFF.toByte() && this[1] == 0xD8.toByte()
+    fun ByteArray.isGif() = this.size >= 6 && this[0] == 0x47.toByte() && this[1] == 0x49.toByte() && this[2] == 0x46.toByte()
 }
