@@ -13,7 +13,7 @@ class LivroService(
     private val livroRepository: LivroRepository,
     private val imagemRepository: ImagemRepository
 ) {
-    fun cadastrarLivro(livro: Livro) {
+    fun cadastrarLivro(livro: Livro): Livro {
         val existeLivro = livroRepository.existsById(livro.id)
         if (existeLivro) throw LivrariaException(HttpStatus.BAD_REQUEST, "esse livro já existe")
 
@@ -25,6 +25,7 @@ class LivroService(
             preco = livro.preco
         )
         livroRepository.save(livroDB)
+        return livroDB
     }
 
     fun listarLivros(): List<Livro> = livroRepository.findAll()

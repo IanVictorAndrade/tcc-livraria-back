@@ -34,10 +34,10 @@ class LivroController(
 
     @PostMapping("/cadastrar")
     fun cadastrarLivro(@RequestBody livro: Livro, uriComponentsBuilder: UriComponentsBuilder
-    ) : ResponseEntity<String> {
-        livroService.cadastrarLivro(livro)
+    ) : ResponseEntity<Livro> {
+        val livroSalvo: Livro = livroService.cadastrarLivro(livro)
         val uri = uriComponentsBuilder.path("/livro/{id}").buildAndExpand(livro.id).toUri()
-        return ResponseEntity.created(uri).body("Livro cadastrado com sucesso!")
+        return ResponseEntity.created(uri).body(livroSalvo)
     }
 
     @GetMapping("/listar")
