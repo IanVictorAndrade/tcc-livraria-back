@@ -34,7 +34,7 @@ class UsuarioController(
     @Autowired
     private val authenticationManager: AuthenticationManager? = null
 
-    @PostMapping("/cadastro")
+    @PostMapping("/cadastrar")
     @Transactional
     fun cadastrarUsuario(@RequestBody dados: UsuarioDTO, uriComponentsBuilder: UriComponentsBuilder): ResponseEntity<Any> {
         usuarioService.cadastrar(dados)
