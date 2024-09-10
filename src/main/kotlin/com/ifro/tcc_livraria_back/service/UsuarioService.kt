@@ -24,6 +24,9 @@ class UsuarioService(
     private val javaMailSender: JavaMailSender
 ) {
 
+    @Value("\${spring_dominio_front}")
+    private val dominioFront: String? = null
+
     @Autowired
     private lateinit var passwordEncoder: BCryptPasswordEncoder
 
@@ -88,7 +91,7 @@ class UsuarioService(
             val mimeMessage = javaMailSender.createMimeMessage()
             val helper = MimeMessageHelper(mimeMessage, "utf-8")
 
-            val resetLink = "http://localhost:3000/trocaSenha?token=$token"
+            val resetLink = "$dominioFront/trocaSenha?token=$token"
             val htmlMsg = """
             <p>Você fez um pedido para trocar sua senha.</p>
             <p>Se for você, clique <a href="$resetLink">aqui</a> para redefinir sua senha.</p>
