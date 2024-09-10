@@ -38,7 +38,7 @@ class SecurityConfiguration(
                 authorize("/livro/editar/{id}", hasRole("ROLE_ADMIN"))
                 authorize("/livro/deletar/{id}", hasRole("ROLE_ADMIN"))
                 authorize("/livro/cadastrar", hasRole("ROLE_ADMIN"))
-                authorize("/livro/listar", hasRole("ROLE_ADMIN"))
+                authorize("/livro/listar", authenticated)
                 authorize("/livro/enviarImagem/{idLivro}", hasRole("ROLE_ADMIN"))
                 authorize("/livro/imagem/{id}", permitAll)
                 authorize("/mercado-pago/link-pagamento", permitAll)

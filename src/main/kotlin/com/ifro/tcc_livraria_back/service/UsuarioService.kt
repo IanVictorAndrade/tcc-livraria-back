@@ -46,6 +46,8 @@ class UsuarioService(
             role = mutableSetOf(role)
         )
 
+        usuario.senha = passwordEncoder.encode(usuario.senha)
+
         usuarioRepository.save(usuario)
     }
 
@@ -70,6 +72,7 @@ class UsuarioService(
     fun buscarPorId(id: Long): Optional<Usuario> = usuarioRepository.findById(id)
 
     fun enviandoEmailDeRecuperacao(email: String, token: String): ResponseEntity<Any> {
+            usuarioRepository.findByEmail(email) ?: throw LivrariaException(HttpStatus.NOT_FOUND, "Usuário não encontrado")
             return try {
                 val mailMessage = SimpleMailMessage()
 
