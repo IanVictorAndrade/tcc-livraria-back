@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 
 data class UsuarioDTO (
     val email: String,
-    val senha: String,
+    val senha: String?,
     val cpf: String,
     val nome: String,
     @JsonDeserialize(using = RoleDTODeserializer::class)

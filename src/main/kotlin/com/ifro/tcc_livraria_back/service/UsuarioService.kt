@@ -52,7 +52,7 @@ class UsuarioService(
             nome = user.nome,
             cpf = user.cpf,
             email = user.email,
-            senha = user.senha,
+            senha = user.senha!!,
             role = mutableSetOf(role)
         )
 
@@ -67,10 +67,8 @@ class UsuarioService(
         val usuarioDB = usuarioRepository.findById(id)
             .orElseThrow { LivrariaException(HttpStatus.NOT_FOUND, "usuário não encontrado") }
         usuarioDB.email = user.email
-        usuarioDB.senha = passwordEncoder.encode(user.senha)
         usuarioDB.cpf = user.cpf
         usuarioDB.nome = user.nome
-        // Atualiza o role do usuário
         if (user.role != null) {
             val role = roleRepository.findByNome(user.role.nome) ?: throw LivrariaException(
                 HttpStatus.BAD_REQUEST,

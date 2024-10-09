@@ -25,6 +25,8 @@ class TokenService(
             val token = JWT.create()
                 .withIssuer("API Livraria Fábio")
                 .withSubject(usuario.email)
+                .withClaim("nome", usuario.nome)
+                .withClaim("cpf", usuario.cpf)
                 .withClaim("id", usuario.id)
                 .withClaim("roles", roles)
                 .withExpiresAt(LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-04:00")))
