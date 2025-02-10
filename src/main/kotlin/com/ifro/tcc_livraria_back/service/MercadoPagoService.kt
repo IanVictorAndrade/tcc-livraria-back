@@ -7,6 +7,7 @@ import com.mercadopago.client.preference.PreferenceClient
 import com.mercadopago.client.preference.PreferenceItemRequest
 import com.mercadopago.client.preference.PreferenceRequest
 import com.mercadopago.resources.preference.Preference
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
@@ -20,22 +21,26 @@ class MercadoPagoService {
 
     private val client = PreferenceClient()
 
+    @Value("\${spring_dominio_front}")
+    private val dominioFront: String? = null
+
 
     fun linkPagamento(item: PreferenceItemDTO): String {
+        val successUrl = "${dominioFront}/pagamentoSucesso?livroId=${item.id}"
+        val failureUrl = "${dominioFront}/pagamentoFalho"
 
         val preferenceRequest: PreferenceRequest = PreferenceRequest.builder()
             .items(mutableListOf(item.toPreferenceItemRequest()))
             .backUrls(
                 PreferenceBackUrlsRequest.builder()
-                    .success("https://youtube.com")
-                    .failure("https://google.com")
+                    .success(successUrl)
+                    .failure(failureUrl)
                     .build()
             )
             .autoReturn("approved")
             .build()
 
         val preference: Preference = client.create(preferenceRequest)
-
         return preference.initPoint
     }
 

@@ -33,7 +33,7 @@ class SecurityConfiguration(
             csrf { disable() }
             authorizeRequests {
                 authorize("/usuario/listar", hasRole("ROLE_ADMIN"))
-                authorize("/usuario/editar/{id}", hasRole("ROLE_ADMIN"))
+                authorize("/usuario/editar/{id}", permitAll)
                 authorize("/usuario/deletar/{id}", hasRole("ROLE_ADMIN"))
                 authorize("/livro/editar/{id}", hasRole("ROLE_ADMIN"))
                 authorize("/livro/deletar/{id}", hasRole("ROLE_ADMIN"))
@@ -44,7 +44,7 @@ class SecurityConfiguration(
                 authorize("/mercado-pago/link-pagamento", authenticated)
                 authorize("/h2-console/**", permitAll)
                 authorize("/usuario/login", permitAll)
-                authorize("/usuario/cadastro", permitAll)
+                authorize("/usuario/cadastrar", permitAll)
                 authorize("/usuario/codigo-senha", permitAll)
                 authorize("/usuario/alterar-senha", permitAll)
                 authorize("/v3/api-docs/**", permitAll)
