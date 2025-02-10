@@ -32,6 +32,18 @@ class GoogleDriveController(
     @GetMapping("/listarArquivos")
     fun listarArquivos() = googleService.listFiles()
 
+    @GetMapping("/obterFileId/{livroId}")
+    fun obterFileId(@PathVariable livroId: Long): ResponseEntity<Map<String, String>> {
+        val livro = livroRepository.findById(livroId)
+            .orElseThrow { LivrariaException(HttpStatus.NOT_FOUND, "Livro não encontrado") }
+
+        val arquivoLivro = livro.arquivoLivro
+            ?: throw LivrariaException(HttpStatus.NOT_FOUND, "Nenhum arquivo associado a este livro")
+
+        return ResponseEntity.ok(mapOf("fileId" to arquivoLivro.googleDriveFileId))
+    }
+
+
     @GetMapping("/download/{fileId}")
     fun downloadFile(@PathVariable fileId: String, response: HttpServletResponse) {
         val bookFile = googleService.getBookFileById(fileId)

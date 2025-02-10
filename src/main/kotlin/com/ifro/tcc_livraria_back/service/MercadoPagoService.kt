@@ -2,34 +2,34 @@ package com.ifro.tcc_livraria_back.service
 
 import com.ifro.tcc_livraria_back.dto.PreferenceItemDTO
 import com.mercadopago.MercadoPagoConfig
+import com.mercadopago.client.payment.PaymentPayerRequest
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest
 import com.mercadopago.client.preference.PreferenceClient
 import com.mercadopago.client.preference.PreferenceItemRequest
+import com.mercadopago.client.preference.PreferencePayerRequest
 import com.mercadopago.client.preference.PreferenceRequest
 import com.mercadopago.resources.preference.Preference
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
-
 @Service
 class MercadoPagoService {
 
-    init {
-        MercadoPagoConfig.setAccessToken("TEST-2968039211870550-080607-86bc28bdde12c632c52bb31dc368f3d4-2751690")
-    }
+    @Value("\${spring_dominio_front}")
+    private lateinit var dominioFront: String
 
     private val client = PreferenceClient()
 
-    @Value("\${spring_dominio_front}")
-    private val dominioFront: String? = null
-
+    init {
+        MercadoPagoConfig.setAccessToken("TEST-5607775475862919-072514-11a5b4e994c191a4a09de1039e8a2246-1915814887")
+    }
 
     fun linkPagamento(item: PreferenceItemDTO): String {
-        val successUrl = "${dominioFront}/pagamentoSucesso?livroId=${item.id}"
-        val failureUrl = "${dominioFront}/pagamentoFalho"
+        val successUrl = "$dominioFront/pagamentoSucesso?livroId=${item.id}"
+        val failureUrl = "$dominioFront/pagamentoFalho"
 
-        val preferenceRequest: PreferenceRequest = PreferenceRequest.builder()
+        val preferenceRequest = PreferenceRequest.builder()
             .items(mutableListOf(item.toPreferenceItemRequest()))
             .backUrls(
                 PreferenceBackUrlsRequest.builder()
@@ -40,9 +40,11 @@ class MercadoPagoService {
             .autoReturn("approved")
             .build()
 
-        val preference: Preference = client.create(preferenceRequest)
-        return preference.initPoint
+        val preference = client.create(preferenceRequest)
+
+        return preference.sandboxInitPoint
     }
+
 
     fun PreferenceItemDTO.toPreferenceItemRequest(): PreferenceItemRequest {
         return PreferenceItemRequest.builder()
